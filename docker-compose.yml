@@ -1,10 +1,12 @@
 version: '3'
 
 services:
-  rabbit:
+  broker:
     image: rabbitmq:3-management
     expose:
+    # rabbitmq
       - 5672
+    # rabbitmq manager
       - 15672
     environment:
       - RABBITMQ_DEFAULT_PASS=pass
@@ -13,31 +15,31 @@ services:
     networks:
       - shared
       - private
-# tried to expose the rabbitmq management browser app, doesn't work because of conflicting http basic auths
-#  web:
-#    image: nginx
-#    volumes:
-#     - ./mysite.conf:/etc/nginx/conf.d/mysite.conf
-#    expose:
-#     - 80
-#    environment:
-#      - NGINX_HOST=playground.${HOSTNAME}
-#      - NGINX_PORT=80
-#      - VIRTUAL_HOST=playground.${HOSTNAME}
-#      - LETSENCRYPT_HOST=playground.${HOSTNAME}
-#      - LETSENCRYPT_EMAIL=${EMAIL}
-#    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/mysite.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
-#    networks:
-#      - shared
-#      - reverse-proxy
+  web:
+    image: nginx
+    volumes:
+     - ./mysite.conf:/etc/nginx/conf.d/mysite.conf
+    expose:
+     - 80
+    environment:
+      - NGINX_HOST=playground.${HOSTNAME}
+      - NGINX_PORT=80
+      - VIRTUAL_HOST=playground.${HOSTNAME}
+      - LETSENCRYPT_HOST=playground.${HOSTNAME}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/mysite.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    networks:
+      - shared
+      - reverse-proxy
   messenger:
     image: "node:8"
     user: "root"
     working_dir: /home/node/app
     volumes:
-      - consumer/messenger:/home/node/app
+      - ./consumer/messenger:/home/node/app
     networks:
       - private
+    command: "npm start"
 
 networks:
   reverse-proxy:
