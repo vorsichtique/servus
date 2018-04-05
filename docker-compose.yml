@@ -23,7 +23,7 @@ services:
     networks:
       - shared
     volumes:
-     - db-data:/var/lib/mysql:rw
+      - db-data:/var/lib/mysql:rw
       # for sql dumps
       - ./sql-dumps:/var/sql-dumps:rw
 #  broker:
