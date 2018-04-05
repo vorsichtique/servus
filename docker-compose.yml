@@ -22,10 +22,26 @@ services:
   #    - MYSQL_USER=gogo
     networks:
       - shared
+      - private
     volumes:
       - db-data:/var/lib/mysql:rw
       # for sql dumps
       - ./sql-dumps:/var/sql-dumps:rw
+  dbweb:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PW}
+      - VIRTUAL_HOST=dbweb-staging.${HOSTNAME}
+      - LETSENCRYPT_HOST=dbweb-staging.${HOSTNAME}
+      - LETSENCRYPT_EMAIL=${EMAIL_ADMIN}
+    networks:
+      - reverse-proxy
+      - private
+    links:
+      - db
+    expose:
+      - 80
+
 #  broker:
 #    image: rabbitmq:3-management
 #    expose:
