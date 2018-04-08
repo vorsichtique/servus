@@ -50,7 +50,8 @@ services:
     build: ./backuper
     env_file:
      - ${ENV_CONTAINER_PATH}/global.env
-    #environment:
+    environment:
+      - DB_PW=${DB_PW}
     volumes:
       - ./sql-dumps:/sql-dumps
       - ./backuper:/usr/src/app

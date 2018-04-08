@@ -15,7 +15,8 @@ RUN pip install awscli --upgrade --user
 
 # Install groff to enable AWS CLI command line help
 RUN apt-get update \
-    && apt-get --assume-yes install groff
+    && apt-get --assume-yes install groff \
+    && apt-get --assume-yes install mysql-client
 
 
 CMD [ "python", "server.py", "80"]
