@@ -13,7 +13,7 @@ let evett = schedule.scheduleJob(process.env.CRONTAB_EVETT_IMPORT_EVENTS, functi
     }
 );
 
-let backuper = schedule.scheduleJob('0 * * * *', function() {
+let backuper = schedule.scheduleJob(process.env.CRONTAB_SERVUS_BACKUPER, function() {
     callWebHook('http://servus_backuper_1/webhooks/run-backup');
 });
 
