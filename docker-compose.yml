@@ -9,6 +9,7 @@ services:
       - ./crontab:/home/node/app
     networks:
       - shared
+      - private
     command: "npm start"
     environment:
       - APP_ENV=dev
@@ -45,6 +46,18 @@ services:
       - db
     expose:
       - 80
+  backuper:
+    build: ./backuper
+    env_file:
+     - ${ENV_CONTAINER_PATH}/global.env
+    #environment:
+    volumes:
+      - ./sql-dumps:/sql-dumps
+      - ./backuper:/usr/src/app
+    expose:
+      - 80
+    networks:
+      - private
 
 #  broker:
 #    image: rabbitmq:3-management
