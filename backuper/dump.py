@@ -4,19 +4,16 @@ from subprocess import call
 import os
 import datetime
 
-os.system("rm /sql-dumps/*")
+def dump():
+    os.system("rm /sql-dumps/*")
+    dbpw = os.environ['DB_PW']
+    dbs = [
+        'evett',
+        'gogo'
+    ]
 
-dbpw = os.environ['DB_PW'] 
+    for db in dbs:
+        dumpname = db + '-' + datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+        os.system("mysqldump -h servus_db_1 -uroot -p%s %s > /sql-dumps/%s.sql" % (dbpw, db, dumpname))
 
-
-dbs = [
-    'evett',
-    'gogo'
-]
-
-for db in dbs:
-    dumpname = db + '-' + datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    os.system("mysqldump -h servus_db_1 -uroot -p%s %s > /sql-dumps/%s.sql" % (dbpw, db, dumpname))
-
-
-os.system("/root/.local/bin/aws s3 sync /sql-dumps %s" % (os.environ['AWS_BUCKET_DUMP_PATH']))
+    os.system("/root/.local/bin/aws s3 sync /sql-dumps %s" % (os.environ['AWS_BUCKET_DUMP_PATH']))

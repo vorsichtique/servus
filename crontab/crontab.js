@@ -13,6 +13,10 @@ let evett = schedule.scheduleJob(process.env.CRONTAB_EVETT_IMPORT_EVENTS, functi
     }
 );
 
+let backuper = schedule.scheduleJob('0 * * * *', function() {
+    callWebHook('http://servus_backuper_1/webhooks/run-backup');
+});
+
 function callWebHook(uri) {
     if ('dev' === process.env.APP_ENV){
         console.log('No webhooking in dev mode');
