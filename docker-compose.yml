@@ -16,7 +16,7 @@ services:
     env_file:
      - ${ENV_CONTAINER_PATH}/servus.global.env
   db:
-    image: mysql
+    image: mysql:5.7
     restart: always
     expose:
       - 3306
